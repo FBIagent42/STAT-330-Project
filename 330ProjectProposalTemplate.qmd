@@ -1,0 +1,124 @@
+---
+title: "Modeling House Price Proposal"
+authors: Corbin Christiansen AND Michael Bjornberg AND George Westover
+format: 
+  pdf:
+    embed-resources: true 
+---
+
+```{=html}
+<style type="text/css">
+h1.title {
+  font-size: 40px;
+  text-align: center;
+}
+</style>
+```
+
+```{r setup, include=FALSE}
+# load all necessary packages here
+library(tidyverse)
+library(readr)
+library(car)
+```
+
+# 1 Group Members
+
+The members of our group are Corbin Christiansen, Michael Bjornberg, George Westover
+
+# 2 Data Set
+
+This data set is a compilation of houses, their various features(house size, floors, bathroom count, ect...), and the details around which it was sold(sale date, price, etc...). This data set contains categorical and numerical data, which could prove a challenge for data analysis. This data set can be found online at the CMU S&DS data repository site. 
+
+```{r}
+ames_housing <- read_csv("ames-housing.csv")
+head(ames_housing)
+```
+
+# 3 Potential Questions of Interest
+
+1.
+**How does the age of a house effect the price at which it was sold?**
+
+This relationship is important to know for families because knowing the timing of when you should sell your house for maximum value can help families get bigger homes when they need it to accommodate bigger family sizes.
+
+2.
+**How do other features of the house(ie. lot size, number of floors, number of bedrooms, etc.) effect the price at which it was sold?**
+
+This relationship could be important for house builders to estimate the profit they could make on potential houses, based on the features they plan on adding.
+
+# 4 Exploratory Data Analysis
+```{r}
+ames_housing %>%
+  ggplot(aes(x = SalePrice)) +
+  geom_histogram() +
+  labs(title = "Histogram of Sales Price",
+       x = "Sales Price",
+       y = "Count")
+
+ames_housing %>%
+  ggplot(aes(x = log(Lot.Area), y = log(SalePrice))) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = F) +
+  labs(title = "Sales Price vs Lot Size", 
+       x = "Log of Lot Area(Sq Ft)",
+       y = "Log of Sales Price")
+
+ames_housing %>%
+  ggplot(aes(x = (Yr.Sold - Year.Built), y = log(SalePrice))) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  labs(title = "Sales Price vs Age",
+       x = "Age",
+       y = "Log of Sales Price")
+```
+1st Graph. We found that the distribution of the sales price is right-skewed by plotting a histogram of the sales price. This is important because it means we will probably have to do some transformations to get linear relationships.
+
+2nd Graph. With some log transformations on both the response and explanatory variables, we were able to find a strong positive linear relationship with sales price and lot size. This is noteworthy because this means the first assumption of linear regression is met
+
+3rd Graph:
+This shows the relationship between the age of the house and the price at which it was sold. In order to find a linear relationship we needed to take the log of the sales price. We found a week, negitive relationship between the age and the price, meaning that as the house gets older it will sell for less money.
+
+# 5 Preliminary Model Fit
+```{r}
+house.lm = lm(I(log(SalePrice))~I(Yr.Sold - Year.Built), data = ames_housing)
+summary(house.lm)
+```
+$$
+\widehat{\text{log(}\text{Sale Price}_i\text{)}}= 12.3229524 - 0.0082885\widehat{\text{Age}_i}
+$$
+This relationship is important to know for families because knowing the timing of when you should sell your house for maximum value can help families get bigger homes when they need it to accommodate bigger family sizes.
+
+DELETE THIS: Do the following:
+
+-   Assess whether the regression assumptions are satisfied
+
+-   Provide interpretation for the estimated coefficients for $\beta_0$ and $\beta_1$. Do so in context of the uncertainty on these estimates.
+
+-   Provide interpretation for the estimated variance parameter.
+
+You are welcome to use as many or as few code blocks as you wish in this section, but make sure that your analysis is easy to follow.
+
+```{r}
+#L- linearity
+ames_housing %>%
+  ggplot(aes(x = (Yr.Sold - Year.Built), y = log(SalePrice))) +
+  geom_point() +
+  labs(title = "L-Linearity",
+       x = "Age",
+       y = "Log of Sales Price")
+
+#N- Normality
+plot(house.lm, which = 2)
+shapiro.test(house.lm$residuals)
+hist(house.lm$residuals)
+
+
+#E-Equal Variance
+ggplot(mapping = aes(y = house.lm$residuals, x = house.lm$fitted.values)) +
+  geom_point() +
+  geom_hline(yintercept = 0)
+  
+#Outliers
+plot(house.lm, which = 5)
+```
