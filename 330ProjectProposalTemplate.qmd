@@ -90,8 +90,6 @@ $$
 $$
 This relationship is important to know for families because knowing the timing of when you should sell your house for maximum value can help families get bigger homes when they need it to accommodate bigger family sizes.
 
--   Provide interpretation for the estimated variance parameter.
-
 ```{r}
 #L- linearity
 ames_housing %>%
@@ -124,10 +122,12 @@ Normality - Through the Shapiro-Wilk test and the Q-Q plot, and a histogram of t
 Equal Variance - The residuals vs fitted values plot seems to show homoskedasticity except for a slight curve and truncation at the end, and a few outlines here and there. All in all, the assumption of Equal Variance seems to be met
 
 
-Our estimates of $$\beta_0$$ and $$\beta_1$$ tell us that for every year increase in the age of the house we estimate that the average log price of the house will increase by 0.0082885.
+Our estimates of $\beta_0$ and $\beta_1$ tell us that for every year increase in the age of the house we estimate that the average log price of the house will increase by 0.0082885.
 
 We also estimate that a brand new house will have an average log sell price of 12.3229524.
 
-Based on the summary we received from r about our lm model, our p-value for our $$\beta_1$$s is nearly 0, meaning we reject the null hypothesis that there is no relationship.
+Based on the summary we received from r about our lm model, our p-value for our $\beta_1$s is nearly 0, meaning we reject the null hypothesis that there is no relationship.
+
+Our $R^2$ statistics is 0.3793 which means that 37.93% of the variance we see in the log of Sales Price can be explained by the age of the house.
 
 
