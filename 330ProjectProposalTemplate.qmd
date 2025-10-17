@@ -84,20 +84,13 @@ This shows the relationship between the age of the house and the price at which 
 house.lm = lm(I(log(SalePrice))~I(Yr.Sold - Year.Built), data = ames_housing)
 summary(house.lm)
 ```
+
 $$
 \widehat{\text{log(}\text{Sale Price}_i\text{)}}= 12.3229524 - 0.0082885\widehat{\text{Age}_i}
 $$
 This relationship is important to know for families because knowing the timing of when you should sell your house for maximum value can help families get bigger homes when they need it to accommodate bigger family sizes.
 
-DELETE THIS: Do the following:
-
--   Assess whether the regression assumptions are satisfied
-
--   Provide interpretation for the estimated coefficients for $\beta_0$ and $\beta_1$. Do so in context of the uncertainty on these estimates.
-
 -   Provide interpretation for the estimated variance parameter.
-
-You are welcome to use as many or as few code blocks as you wish in this section, but make sure that your analysis is easy to follow.
 
 ```{r}
 #L- linearity
@@ -122,3 +115,18 @@ ggplot(mapping = aes(y = house.lm$residuals, x = house.lm$fitted.values)) +
 #Outliers
 plot(house.lm, which = 5)
 ```
+Linearity - Linearity is met because the scatter plot of the age of the house against the log of the Sale Price looks linear. The residuals vs fitted values plot also shows a linear trend.
+
+Independence - Is not met because the houses sampled are from the same area in Ames, Iowa.
+
+Normality - Through the Shapiro-Wilk test and the Q-Q plot, and a histogram of the residuals, it seems as if the data is short-tailed and not normal. Although this assumption seems violated, because of how large our data set is, 2930 data points, this violation is not a big problem.
+
+Equal Variance - The residuals vs fitted values plot seems to show homoskedasticity except for a slight curve and truncation at the end, and a few outliers here and there. All in all, the assumption of Equal Variance seems to be met
+
+
+Our estimates of $$\beta_0$$ and $$\beta_1$$ tell us that for every year increase in the age of the house we estimate that the average log price of the house will increase by 0.0082885.
+
+We also estimate that a brand new house will have an average log sell price of 12.3229524.
+
+
+
