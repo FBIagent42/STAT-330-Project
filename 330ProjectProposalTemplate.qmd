@@ -98,28 +98,35 @@ ames_housing %>%
   labs(title = "L-Linearity",
        x = "Age",
        y = "Log of Sales Price")
-
-#N- Normality
-plot(house.lm, which = 2)
-shapiro.test(house.lm$residuals)
-hist(house.lm$residuals)
-
-
-#E-Equal Variance
-ggplot(mapping = aes(y = house.lm$residuals, x = house.lm$fitted.values)) +
-  geom_point() +
-  geom_hline(yintercept = 0)
-  
-#Outliers
-plot(house.lm, which = 5)
 ```
+
 Linearity - Linearity is met because the scatter plot of the age of the house against the log of the Sale Price looks linear. The residuals vs fitted values plot also shows a linear trend.
 
 Independence - Is not met because the houses sampled are from the same area in Ames, Iowa.
 
+```{r}
+#N- Normality
+plot(house.lm, which = 2, sub.caption = "")
+shapiro.test(house.lm$residuals)
+hist(house.lm$residuals, xlab = "Residuals")
+```
+
 Normality - Through the Shapiro-Wilk test and the Q-Q plot, and a histogram of the residuals, it seems as if the data is short-tailed and not normal. Although this assumption seems violated, because of how large our data set is, 2930 data points, this violation is not a big problem.
 
+```{r}
+#E-Equal Variance
+ggplot(mapping = aes(y = house.lm$residuals, x = house.lm$fitted.values)) +
+  geom_point() +
+  geom_hline(yintercept = 0)
+```
+
 Equal Variance - The residuals vs fitted values plot seems to show homoskedasticity except for a slight curve and truncation at the end, and a few outlines here and there. All in all, the assumption of Equal Variance seems to be met
+
+```{r}  
+#Outliers
+plot(house.lm, which = 5)
+```
+Outlines - Based on the Cook's distance, we have no undue influential points or outlines
 
 
 Our estimates of $\beta_0$ and $\beta_1$ tell us that for every year increase in the age of the house we estimate that the average log price of the house will increase by 0.0082885.
